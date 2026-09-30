@@ -3,29 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Street Legends</title>
+    <title>أساطير الشارع - Street Legends</title>
     <style>
         body {
-            background-color: #111111;
+            background: linear-gradient(135deg, #111111, #1a1a2e);
             color: #ffffff;
             font-family: Tahoma, sans-serif;
             text-align: center;
-            padding-top: 20vh;
             margin: 0;
+            padding: 20px;
         }
         h1 {
             color: #ff4757;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 2.2rem;
+            margin-top: 20px;
+        }
+        .game-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #ff4757;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 400px;
+            margin: 20px auto;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        }
+        .score {
+            font-size: 1.5rem;
+            color: #2ed573;
+            margin: 15px 0;
+        }
+        button {
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.4);
+            transition: 0.2s;
+        }
+        button:active {
+            transform: scale(0.95);
         }
         p {
             color: #cccccc;
-            font-size: 1.2rem;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
-    <h1>أساطير الشارع</h1>
-    <p>تم نشر الموقع واللعبة بنجاح!</p>
+
+    <h1>🔥 أساطير الشارع 🔥</h1>
+    <p>مرحباً بك في ساحة المعركة والتحدي!</p>
+
+    <div class="game-card">
+        <h3>التحدي السريع</h3>
+        <p>اضغط على الزر أدناه لزيادة قوتك وسيطرتك في الشارع:</p>
+        <div class="score" id="scoreDisplay">النقاط: 0</div>
+        <button onclick="addPower()">ارفع السيطرة ⚡</button>
+    </div>
+
+    <script>
+        let score = 0;
+        function addPower() {
+            score += 10;
+            document.getElementById('scoreDisplay').innerText = "النقاط: " + score;
+        }
+    </script>
+
 </body>
 </html>
