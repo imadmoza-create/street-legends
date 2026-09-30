@@ -1,246 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Street Legends</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Street Legends - أساطير الشارع</title>
     <style>
         body {
+            background: #111;
+            color: #fff;
+            font-family: Tahoma, sans-serif;
+            text-align: center;
+            padding-top: 20vh;
             margin: 0;
-            padding: 0;
-            background-color: #0d0d0d;
-            color: #ffffff;
-            font-family: system-ui, -apple-system, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
-            touch-action: none;
         }
         h1 {
-            margin: 5px 0;
-            font-size: 1.5rem;
-            color: #ff3333;
-            letter-spacing: 2px;
-        }
-        #scoreboard {
-            font-size: 1.8rem;
-            font-weight: bold;
+            color: #ff4757;
+            font-size: 2.5rem;
             margin-bottom: 10px;
         }
-        .score-red { color: #ff4d4d; }
-        .score-blue { color: #4d4dff; }
-        canvas {
-            background: #1a1a1a;
-            border: 2px solid #333;
-            border-radius: 8px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-            max-width: 95vw;
-            max-height: 60vh;
-        }
-        .instructions {
-            margin-top: 12px;
-            font-size: 0.85rem;
-            color: #888;
-            text-align: center;
-            padding: 0 10px;
+        p {
+            color: #ccc;
+            font-size: 1.2rem;
         }
     </style>
 </head>
 <body>
-
-    <h1>STREET LEGENDS</h1>
-    <div id="scoreboard">
-        <span class="score-red" id="redScore">0</span> : <span class="score-blue" id="blueScore">0</span>
-    </div>
-
-    <canvas id="gameCanvas" width="600" height="400"></canvas>
-
-    <div class="instructions">
-        DRAG ANYWHERE TO MOVE • SMART AI OPPONENT
-    </div>
-
-    <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-
-        let redScore = 0;
-        let blueScore = 0;
-
-        const ball = {
-            x: canvas.width / 2,
-            y: canvas.height / 2,
-            radius: 12,
-            vx: 0,
-            vy: 0,
-            speed: 0.985
-        };
-
-        const redPlayer = {
-            x: 150,
-            y: canvas.height / 2,
-            radius: 20,
-            targetX: 150,
-            targetY: canvas.height / 2
-        };
-
-        const bluePlayer = {
-            x: 450,
-            y: canvas.height / 2,
-            radius: 20,
-            targetX: 450,
-            targetY: canvas.height / 2
-        };
-
-        let isTouching = false;
-
-        window.addEventListener('pointerdown', (e) => {
-            isTouching = true;
-            updateRedTarget(e);
-        });
-
-        window.addEventListener('pointermove', (e) => {
-            if (isTouching) {
-                updateRedTarget(e);
-            }
-        });
-
-        window.addEventListener('pointerup', () => {
-            isTouching = false;
-        });
-
-        function updateRedTarget(e) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            
-            let touchY = (e.clientY - rect.top) * scaleY;
-            
-            redPlayer.targetX = (e.clientX - rect.left) * scaleX;
-            redPlayer.targetY = touchY - 40; // إزاحة للأعلى لتبقى الرؤية واضحة
-            
-            if (redPlayer.targetX > canvas.width / 2 - 20) {
-                redPlayer.targetX = canvas.width / 2 - 20;
-            }
-            if (redPlayer.targetX < 30) redPlayer.targetX = 30;
-            if (redPlayer.targetY < 30) redPlayer.targetY = 30;
-            if (redPlayer.targetY > canvas.height - 30) redPlayer.targetY = canvas.height - 30;
-        }
-
-        function update() {
-            redPlayer.x += (redPlayer.targetX - redPlayer.x) * 0.2;
-            redPlayer.y += (redPlayer.targetY - redPlayer.y) * 0.2;
-
-            let targetBlueX = ball.x;
-            let targetBlueY = ball.y;
-
-            if (targetBlueX < canvas.width / 2 + 30) {
-                targetBlueX = canvas.width / 2 + 30;
-            }
-
-            bluePlayer.x += (targetBlueX - bluePlayer.x) * 0.07;
-            bluePlayer.y += (targetBlueY - bluePlayer.y) * 0.07;
-
-            if (bluePlayer.x > canvas.width - 30) bluePlayer.x = canvas.width - 30;
-            if (bluePlayer.y < 30) bluePlayer.y = 30;
-            if (bluePlayer.y > canvas.height - 30) bluePlayer.y = canvas.height - 30;
-
-            ball.x += ball.vx;
-            ball.y += ball.vy;
-            ball.vx *= ball.speed;
-            ball.vy *= ball.speed;
-
-            if (ball.y - ball.radius < 0) { ball.y = ball.radius; ball.vy *= -1; }
-            if (ball.y + ball.radius > canvas.height) { ball.y = canvas.height - ball.radius; ball.vy *= -1; }
-
-            checkCollision(redPlayer);
-            checkCollision(bluePlayer);
-
-            if (ball.x - ball.radius < 0) {
-                blueScore++;
-                document.getElementById('blueScore').innerText = blueScore;
-                resetBall();
-            }
-            if (ball.x + ball.radius > canvas.width) {
-                redScore++;
-                document.getElementById('redScore').innerText = redScore;
-                resetBall();
-            }
-        }
-
-        function checkCollision(player) {
-            let dx = ball.x - player.x;
-            let dy = ball.y - player.y;
-            let dist = Math.hypot(dx, dy);
-            let minDist = ball.radius + player.radius;
-
-            if (dist < minDist) {
-                let angle = Math.atan2(dy, dx);
-                let push = minDist - dist;
-                ball.x += Math.cos(angle) * push;
-                ball.y += Math.sin(angle) * push;
-                
-                let hitSpeed = Math.hypot(ball.vx, ball.vy) + 4;
-                ball.vx = Math.cos(angle) * Math.max(hitSpeed, 6);
-                ball.vy = Math.sin(angle) * Math.max(hitSpeed, 6);
-            }
-        }
-
-        function resetBall() {
-            ball.x = canvas.width / 2;
-            ball.y = canvas.height / 2;
-            ball.vx = 0;
-            ball.vy = 0;
-            bluePlayer.x = 450;
-            bluePlayer.y = canvas.height / 2;
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            ctx.strokeStyle = '#333';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
-
-            ctx.beginPath();
-            ctx.moveTo(canvas.width / 2, 10);
-            ctx.lineTo(canvas.width / 2, canvas.height - 10);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.arc(canvas.width / 2, canvas.height / 2, 50, 0, Math.PI * 2);
-            ctx.stroke();
-
-            ctx.fillStyle = '#ff3333';
-            ctx.fillRect(10, canvas.height / 2 - 40, 5, 80);
-            ctx.fillStyle = '#3333ff';
-            ctx.fillRect(canvas.width - 15, canvas.height / 2 - 40, 5, 80);
-
-            ctx.fillStyle = '#ff4d4d';
-            ctx.beginPath();
-            ctx.arc(redPlayer.x, redPlayer.y, redPlayer.radius, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.fillStyle = '#4d4dff';
-            ctx.beginPath();
-            ctx.arc(bluePlayer.x, bluePlayer.y, bluePlayer.radius, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        function loop() {
-            update();
-            draw();
-            requestAnimationFrame(loop);
-        }
-
-        loop();
-    </script>
+    <h1>أساطير الشارع</h1>
+    <p>تم نشر الموقع واللعبة بنجاح على غيت هاب!</p>
 </body>
 </html>
