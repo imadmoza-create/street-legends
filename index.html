@@ -5,72 +5,186 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>أساطير الشارع - Street Legends</title>
     <style>
-        body {
-            background: linear-gradient(135deg, #111111, #1a1a2e);
-            color: #ffffff;
-            font-family: Tahoma, sans-serif;
-            text-align: center;
+        * {
+            box-sizing: border-box;
             margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0f111a;
+            color: #ffffff;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
-        h1 {
-            color: #ff4757;
-            font-size: 2.2rem;
-            margin-top: 20px;
-        }
-        .game-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid #ff4757;
+        .container {
+            max-width: 400px;
+            width: 100%;
+            background: #1a1d29;
             border-radius: 15px;
             padding: 20px;
-            max-width: 400px;
-            margin: 20px auto;
             box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            border: 1px solid #2d3250;
+        }
+        h1 {
+            text-align: center;
+            color: #ff4757;
+            margin-bottom: 5px;
+            font-size: 26px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #a4b0be;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .stats-box {
+            background: #11131c;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid #ff4757;
         }
         .score {
-            font-size: 1.5rem;
+            font-size: 32px;
+            font-weight: bold;
             color: #2ed573;
-            margin: 15px 0;
         }
-        button {
-            background-color: #ff4757;
+        .label {
+            font-size: 14px;
+            color: #a4b0be;
+        }
+        .main-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #ff4757, #ff6b81);
             color: white;
             border: none;
-            padding: 12px 25px;
-            font-size: 1.1rem;
-            border-radius: 8px;
-            cursor: pointer;
+            padding: 18px;
+            font-size: 20px;
             font-weight: bold;
-            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.4);
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+            transition: 0.1s;
+            margin-bottom: 20px;
+        }
+        .main-btn:active {
+            transform: scale(0.97);
+        }
+        .section-title {
+            font-size: 16px;
+            color: #ffa502;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #2d3250;
+            padding-bottom: 5px;
+        }
+        .upgrade-btn {
+            width: 100%;
+            background: #2f3542;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             transition: 0.2s;
+            border: 1px solid #57606f;
         }
-        button:active {
-            transform: scale(0.95);
+        .upgrade-btn:hover {
+            background: #57606f;
         }
-        p {
-            color: #cccccc;
-            line-height: 1.6;
+        .upgrade-btn:disabled {
+            background: #1e2229;
+            color: #57606f;
+            border-color: #2d3250;
+            cursor: not-allowed;
         }
     </style>
 </head>
 <body>
 
-    <h1>🔥 أساطير الشارع 🔥</h1>
-    <p>مرحباً بك في ساحة المعركة والتحدي!</p>
+    <div class="container">
+        <h1>🔥 أساطير الشارع 🔥</h1>
+        <div class="subtitle">ابنِ إمبراطوريتك وسيطر على الحي</div>
 
-    <div class="game-card">
-        <h3>التحدي السريع</h3>
-        <p>اضغط على الزر أدناه لزيادة قوتك وسيطرتك في الشارع:</p>
-        <div class="score" id="scoreDisplay">النقاط: 0</div>
-        <button onclick="addPower()">ارفع السيطرة ⚡</button>
+        <div class="stats-box">
+            <div class="label">إجمالي النفوذ (النقاط)</div>
+            <div class="score" id="score">0</div>
+            <div style="font-size: 12px; color: #747d8c; margin-top: 5px;" id="cps">يكسب: 0 نقطة / ثانية</div>
+        </div>
+
+        <button class="main-btn" onclick="boostScore()">⚡ فرض السيطرة</button>
+
+        <div class="section-title">🛠️ تطويرات وترقيات</div>
+        
+        <button class="upgrade-btn" id="buyFollower" onclick="buyFollower()">
+            <span>👥 تجنيد تابع (+1/ثانية)</span>
+            <span id="followerCost">15 نقطة</span>
+        </button>
+
+        <button class="upgrade-btn" id="buyPower" onclick="buyPower()">
+            <span>💪 تقوية الضربة (+1 للنقرة)</span>
+            <span id="powerCost">50 نقطة</span>
+        </button>
     </div>
 
     <script>
         let score = 0;
-        function addPower() {
-            score += 10;
-            document.getElementById('scoreDisplay').innerText = "النقاط: " + score;
+        let clickPower = 1;
+        let cps = 0;
+        
+        let followerCost = 15;
+        let followerCount = 0;
+        
+        let powerCost = 50;
+
+        function boostScore() {
+            score += clickPower;
+            updateDisplay();
         }
+
+        function buyFollower() {
+            if (score >= followerCost) {
+                score -= followerCost;
+                followerCount++;
+                cps++;
+                followerCost = Math.floor(followerCost * 1.5);
+                updateDisplay();
+            }
+        }
+
+        function buyPower() {
+            if (score >= powerCost) {
+                score -= powerCost;
+                clickPower++;
+                powerCost = Math.floor(powerCost * 2);
+                updateDisplay();
+            }
+        }
+
+        function updateDisplay() {
+            document.getElementById('score').innerText = score;
+            document.getElementById('cps').innerText = "يكسب: " + cps + " نقطة / ثانية";
+            document.getElementById('followerCost').innerText = followerCost + " نقطة";
+            document.getElementById('powerCost').innerText = powerCost + " نقطة";
+
+            // تعطيل أو تفعيل الأزرار حسب الرصيد
+            document.getElementById('buyFollower').disabled = score < followerCost;
+            document.getElementById('buyPower').disabled = score < powerCost;
+        }
+
+        // نظام النقاط التلقائية كل ثانية
+        setInterval(function() {
+            score += cps;
+            updateDisplay();
+        }, 1000);
     </script>
 
 </body>
