@@ -12,7 +12,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            background-color: #0f111a;
+            background-color: #0b0c10;
             color: #ffffff;
             padding: 15px;
             display: flex;
@@ -21,92 +21,86 @@
             min-height: 100vh;
         }
         .container {
-            max-width: 400px;
+            max-width: 420px;
             width: 100%;
-            background: #1a1d29;
+            background: #1f2833;
             border-radius: 15px;
             padding: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-            border: 1px solid #2d3250;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            border: 2px solid #66fcf1;
         }
         h1 {
             text-align: center;
-            color: #ff4757;
+            color: #66fcf1;
             margin-bottom: 5px;
-            font-size: 24px;
+            font-size: 26px;
         }
         .subtitle {
             text-align: center;
-            color: #a4b0be;
+            color: #c5c6c7;
             font-size: 13px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
-        .stats-box {
-            background: #11131c;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            background: #0b0c10;
+            border: 1px solid #45a29e;
             border-radius: 10px;
             padding: 12px;
             text-align: center;
-            margin-bottom: 15px;
-            border: 1px solid #ff4757;
         }
-        .score {
-            font-size: 28px;
+        .stat-value {
+            font-size: 20px;
             font-weight: bold;
-            color: #2ed573;
+            color: #66fcf1;
+            margin-top: 5px;
         }
-        .label {
-            font-size: 13px;
-            color: #a4b0be;
+        .action-area {
+            background: #0b0c10;
+            border: 2px dashed #45a29e;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
         }
-        .main-btn {
-            width: 100%;
-            background: linear-gradient(45deg, #ff4757, #ff6b81);
-            color: white;
+        .main-action-btn {
+            background: linear-gradient(135deg, #45a29e, #66fcf1);
+            color: #0b0c10;
             border: none;
-            padding: 15px;
+            padding: 15px 25px;
             font-size: 18px;
             font-weight: bold;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+            box-shadow: 0 4px 15px rgba(102, 252, 241, 0.3);
             transition: 0.1s;
-            margin-bottom: 15px;
+            width: 100%;
         }
-        .main-btn:active {
-            transform: scale(0.97);
+        .main-action-btn:active {
+            transform: scale(0.96);
         }
         .section-title {
             font-size: 15px;
-            color: #ffa502;
-            margin: 15px 0 8px 0;
-            border-bottom: 1px solid #2d3250;
-            padding-bottom: 4px;
+            color: #66fcf1;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #45a29e;
+            padding-bottom: 5px;
         }
-        .upgrade-btn, .mission-btn {
-            width: 100%;
-            background: #2f3542;
-            color: white;
-            border: none;
-            padding: 10px 12px;
+        .log-box {
+            background: #0b0c10;
             border-radius: 8px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: 0.2s;
-            border: 1px solid #57606f;
-            font-size: 13px;
-        }
-        .mission-btn {
-            background: #1e3799;
-            border-color: #4a69bd;
-        }
-        .upgrade-btn:disabled, .mission-btn:disabled {
-            background: #1e2229;
-            color: #57606f;
-            border-color: #2d3250;
-            cursor: not-allowed;
+            padding: 10px;
+            height: 90px;
+            overflow-y: auto;
+            font-size: 12px;
+            color: #c5c6c7;
+            border: 1px solid #45a29e;
+            text-align: right;
         }
     </style>
 </head>
@@ -114,100 +108,50 @@
 
     <div class="container">
         <h1>🔥 أساطير الشارع 🔥</h1>
-        <div class="subtitle">النسخة الشاملة والمطورة</div>
+        <div class="subtitle">النسخة الرسمية المطورة حسب الاتفاق</div>
 
-        <div class="stats-box">
-            <div class="label">إجمالي النفوذ (النقاط)</div>
-            <div class="score" id="score">0</div>
-            <div style="font-size: 11px; color: #747d8c; margin-top: 3px;" id="cps">يكسب: 0 نقطة / ثانية</div>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div style="font-size: 12px; color: #c5c6c7;">النفوذ والقوة</div>
+                <div class="stat-value" id="power">100</div>
+            </div>
+            <div class="stat-box">
+                <div style="font-size: 12px; color: #c5c6c7;">السيطرة على الحي</div>
+                <div class="stat-value" id="territory">منطقة 1</div>
+            </div>
         </div>
 
-        <button class="main-btn" onclick="boostScore()">⚡ فرض السيطرة</button>
+        <div class="action-area">
+            <button class="main-action-btn" onclick="performAction()">⚔️ فرض النفوذ والسيطرة</button>
+        </div>
 
-        <div class="section-title">🛠️ التطويرات والترقيات</div>
-        
-        <button class="upgrade-btn" id="buyFollower" onclick="buyFollower()">
-            <span>👥 تجنيد تابع (+1/ثانية)</span>
-            <span id="followerCost">15 نقطة</span>
-        </button>
-
-        <button class="upgrade-btn" id="buyPower" onclick="buyPower()">
-            <span>💪 تقوية الضربة (+1 للنقرة)</span>
-            <span id="powerCost">50 نقطة</span>
-        </button>
-
-        <div class="section-title">🗺️ مهام السيطرة على الأحياء</div>
-
-        <button class="mission-btn" id="mission1" onclick="doMission(100, 500, 'mission1')">
-            <span>🛡️ تأمين الزقاق الخلفي (جائزة: 500)</span>
-            <span>تكلفة: 100</span>
-        </button>
-
-        <button class="mission-btn" id="mission2" onclick="doMission(500, 3000, 'mission2')">
-            <span>👑 السيطرة على الشارع الرئيسي (جائزة: 3000)</span>
-            <span>تكلفة: 500</span>
-        </button>
+        <div class="section-title">📜 سجل أحداث الشارع</div>
+        <div class="log-box" id="gameLog">
+            أهلاً بك يا زعيم في أساطير الشارع. ابدأ فرض النفوذ والسيطرة الآن...<br>
+        </div>
     </div>
 
     <script>
-        let score = 0;
-        let clickPower = 1;
-        let cps = 0;
-        
-        let followerCost = 15;
-        let powerCost = 50;
+        let power = 100;
+        let territoryLevel = 1;
 
-        function boostScore() {
-            score += clickPower;
-            updateDisplay();
+        function logMessage(msg) {
+            const logBox = document.getElementById('gameLog');
+            logBox.innerHTML = msg + "<br>" + logBox.innerHTML;
         }
 
-        function buyFollower() {
-            if (score >= followerCost) {
-                score -= followerCost;
-                cps++;
-                followerCost = Math.floor(followerCost * 1.5);
-                updateDisplay();
-            }
-        }
-
-        function buyPower() {
-            if (score >= powerCost) {
-                score -= powerCost;
-                clickPower++;
-                powerCost = Math.floor(powerCost * 2);
-                updateDisplay();
-            }
-        }
-
-        function doMission(cost, reward, buttonId) {
-            if (score >= cost) {
-                score -= cost;
-                score += reward;
-                document.getElementById(buttonId).disabled = true;
-                document.getElementById(buttonId).style.opacity = "0.5";
-                updateDisplay();
-            }
-        }
-
-        function updateDisplay() {
-            document.getElementById('score').innerText = score;
-            document.getElementById('cps').innerText = "يكسب: " + cps + " نقطة / ثانية";
-            document.getElementById('followerCost').innerText = followerCost + " نقطة";
-            document.getElementById('powerCost').innerText = powerCost + " نقطة";
-
-            document.getElementById('buyFollower').disabled = score < followerCost;
-            document.getElementById('buyPower').disabled = score < powerCost;
+        function performAction() {
+            power += 15;
+            document.getElementById('power').innerText = power;
             
-            // التحقق من مهام السيطرة
-            if (score < 100) document.getElementById('mission1').disabled = true;
-            if (score < 500) document.getElementById('mission2').disabled = true;
+            if (power >= territoryLevel * 200) {
+                territoryLevel++;
+                document.getElementById('territory').innerText = "منطقة " + territoryLevel;
+                logMessage("👑 تم توسيع النفوذ والسيطرة والانتقال إلى المستوى " + territoryLevel + "!");
+            } else {
+                logMessage("⚡ تم تنفيذ عملية ناجحة في الشارع (+15 نفوذ)");
+            }
         }
-
-        setInterval(function() {
-            score += cps;
-            updateDisplay();
-        }, 1000);
     </script>
 
 </body>
