@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أساطير الشارع - Street Legends | ساحة المعركة الحقيقية</title>
+    <title>أساطير الشارع - Street Legends | لعبة الحركة</title>
     <style>
         * {
             box-sizing: border-box;
@@ -14,284 +14,220 @@
         body {
             background-color: #0b0f19;
             color: #ffffff;
-            padding: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
+            overflow: hidden;
         }
-        .container {
-            max-width: 440px;
+        .game-container {
             width: 100%;
+            max-width: 400px;
             background: #131b2e;
             border-radius: 16px;
-            padding: 15px;
+            padding: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            border: 2px solid #ef4444;
+            border: 2px solid #3b82f6;
+            text-align: center;
         }
         h1 {
-            text-align: center;
-            color: #f8fafc;
-            margin-bottom: 3px;
-            font-size: 22px;
-            text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+            font-size: 18px;
+            color: #3b82f6;
+            margin-bottom: 5px;
         }
-        .subtitle {
-            text-align: center;
-            color: #94a3b8;
-            font-size: 11px;
-            margin-bottom: 15px;
-        }
-        .top-stats {
+        .score-board {
             display: flex;
             justify-content: space-between;
-            background: #1e293b;
-            padding: 10px 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
             font-size: 13px;
+            margin-bottom: 8px;
+            padding: 0 5px;
             font-weight: bold;
         }
-        .battle-arena {
+        canvas {
             background: #090d16;
-            border: 2px solid #334155;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #334155;
         }
-        .fighters {
+        .controls {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .fighter {
-            text-align: center;
-            width: 45%;
-        }
-        .fighter-avatar {
-            font-size: 40px;
-            margin-bottom: 5px;
-        }
-        .fighter-name {
-            font-size: 12px;
-            font-weight: bold;
-            color: #f1f5f9;
-            margin-bottom: 5px;
-        }
-        .health-bar-container {
-            width: 100%;
-            background: #334155;
-            border-radius: 5px;
-            height: 10px;
-            overflow: hidden;
-            border: 1px solid #475569;
-        }
-        .health-bar {
-            height: 100%;
-            width: 100%;
-            background: #22c55e;
-            transition: width 0.3s ease;
-        }
-        .enemy-health {
-            background: #ef4444;
-        }
-        .vs-text {
-            font-size: 16px;
-            font-weight: bold;
-            color: #f59e0b;
-        }
-        .combat-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-bottom: 15px;
+            margin-top: 10px;
         }
-        .btn {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        .ctrl-btn {
+            flex: 1;
+            background: #2563eb;
             color: white;
             border: none;
-            padding: 12px;
-            font-size: 14px;
+            padding: 14px;
+            font-size: 18px;
             font-weight: bold;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: 0.1s;
+            user-select: none;
         }
-        .btn:active {
-            transform: scale(0.97);
-        }
-        .btn-attack {
-            background: linear-gradient(135deg, #ef4444, #b91c1c);
-        }
-        .btn-special {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            grid-column: span 2;
-        }
-        .log-box {
-            background: #090d16;
-            border-radius: 8px;
-            padding: 10px;
-            height: 110px;
-            overflow-y: auto;
-            font-size: 11px;
-            color: #cbd5e1;
-            border: 1px solid #1e293b;
+        .ctrl-btn:active {
+            background: #1d4ed8;
+            transform: scale(0.96);
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>🔥 أساطير الشارع 🔥</h1>
-        <div class="subtitle">ساحة المواجهة والقتال الحقيقي</div>
-
-        <div class="top-stats">
-            <div>💵 الأموال: <span id="cashVal">0</span></div>
-            <div>🏆 الانتصارات: <span id="winsVal">0</span></div>
+    <div class="game-container">
+        <h1>🔥 أساطير الشارع - ساحة الحركة 🔥</h1>
+        <div class="score-board">
+            <div>النقاط: <span id="scoreVal">0</span></div>
+            <div>المحاولات (HP): <span id="hpVal">3</span></div>
         </div>
 
-        <div class="battle-arena">
-            <div class="fighters">
-                <div class="fighter">
-                    <div class="fighter-avatar">🥋</div>
-                    <div class="fighter-name">أنت (البطل)</div>
-                    <div class="health-bar-container">
-                        <div class="health-bar" id="playerHealthBar"></div>
-                    </div>
-                    <div style="font-size: 10px; color: #94a3b8; margin-top: 3px;"><span id="playerHpText">100</span>/100</div>
-                </div>
+        <!-- شاشة اللعب التفاعلية Canvas -->
+        <canvas id="gameCanvas" width="360" height="420"></canvas>
 
-                <div class="vs-text">VS</div>
-
-                <div class="fighter">
-                    <div class="fighter-avatar">🦹‍♂️</div>
-                    <div class="fighter-name" id="enemyName">زعيـم العصابة</div>
-                    <div class="health-bar-container">
-                        <div class="health-bar enemy-health" id="enemyHealthBar"></div>
-                    </div>
-                    <div style="font-size: 10px; color: #94a3b8; margin-top: 3px;"><span id="enemyHpText">100</span>/100</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="combat-controls">
-            <button class="btn btn-attack" onclick="playerAttack()">⚔️ هجوم سريع</button>
-            <button class="btn" onclick="playerDefend()">🛡️ تكتيك دفاعي</button>
-            <button class="btn btn-special" onclick="playerSpecial()">⚡ ضربة قاضية</button>
-        </div>
-
-        <div class="log-box" id="gameLog">
-            بدأت المواجهة الحقيقية! اختر ضربتك وقاتل خصمك الآن...<br>
+        <div class="controls">
+            <button class="ctrl-btn" ontouchstart="moveLeft()" onclick="moveLeft()">◀️ يسار</button>
+            <button class="ctrl-btn" ontouchstart="moveRight()" onclick="moveRight()">يمين ▶️</button>
         </div>
     </div>
 
     <script>
-        let playerHp = 100;
-        let enemyHp = 100;
-        let cash = 0;
-        let wins = 0;
-        let isDefending = false;
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
 
-        const enemies = ["زعيم الحي الخلفي", "قائد العصابة الملثمة", "بلطجي الميناء", "مرعب الشوارع"];
-        let currentEnemyName = enemies[0];
+        let score = 0;
+        let hp = 3;
+        let isGameOver = false;
 
-        function logMessage(msg) {
-            const logBox = document.getElementById('gameLog');
-            logBox.innerHTML = msg + "<br>" + logBox.innerHTML;
+        // خصائص اللاعب
+        let player = {
+            x: 150,
+            y: 360,
+            width: 40,
+            height: 40,
+            speed: 25,
+            color: "#3b82f6"
+        };
+
+        // خصائص العقبات (الأعداء في الشارع)
+        let obstacles = [];
+        let spawnTimer = 0;
+
+        function moveLeft() {
+            if (isGameOver) return;
+            player.x -= player.speed;
+            if (player.x < 0) player.x = 0;
         }
 
-        function updateUI() {
-            document.getElementById('playerHealthBar').style.width = Math.max(0, playerHp) + "%";
-            document.getElementById('playerHpText').innerText = Math.max(0, playerHp);
-            
-            document.getElementById('enemyHealthBar').style.width = Math.max(0, enemyHp) + "%";
-            document.getElementById('enemyHpText').innerText = Math.max(0, enemyHp);
-            
-            document.getElementById('cashVal').innerText = cash;
-            document.getElementById('winsVal').innerText = wins;
-            document.getElementById('enemyName').innerText = currentEnemyName;
-        }
-
-        function playerAttack() {
-            if (playerHp <= 0 || enemyHp <= 0) return;
-            isDefending = false;
-
-            let damageToEnemy = Math.floor(Math.random() * 15) + 15;
-            enemyHp -= damageToEnemy;
-            logMessage("👊 سددت ضربة قوية وألحقت بـ " + currentEnemyName + " ضرراً قدره " + damageToEnemy);
-
-            checkBattleState();
-            if (enemyHp > 0) {
-                setTimeout(enemyTurn, 600);
-            }
-            updateUI();
-        }
-
-        function playerDefend() {
-            if (playerHp <= 0 || enemyHp <= 0) return;
-            isDefending = true;
-            logMessage("🛡️ اتخذت وضعية دفاعية لتخفيف هجوم العدو القادم!");
-            
-            setTimeout(enemyTurn, 600);
-            updateUI();
-        }
-
-        function playerSpecial() {
-            if (playerHp <= 0 || enemyHp <= 0) return;
-            isDefending = false;
-
-            let damageToEnemy = Math.floor(Math.random() * 20) + 30;
-            enemyHp -= damageToEnemy;
-            logMessage("⚡ أطلقت ضربة قاضية مدمرة أطاحت بـ " + damageToEnemy + " من طاقة العدو!");
-
-            checkBattleState();
-            if (enemyHp > 0) {
-                setTimeout(enemyTurn, 600);
-            }
-            updateUI();
-        }
-
-        function enemyTurn() {
-            if (enemyHp <= 0) return;
-
-            let damageToPlayer = Math.floor(Math.random() * 12) + 10;
-            if (isDefending) {
-                damageToPlayer = Math.floor(damageToPlayer / 2);
-                logMessage("🛡️ نجح دفاعك! تم تقليل الضرر القادم إلى النصف.");
-                isDefending = false;
-            }
-
-            playerHp -= damageToPlayer;
-            logMessage("⚠️ رد الخصم بهجوم عنيف وأصابك بـ " + damageToPlayer + " ضرراً!");
-
-            checkBattleState();
-            updateUI();
-        }
-
-        function checkBattleState() {
-            if (enemyHp <= 0) {
-                wins++;
-                let reward = 250 + (wins * 50);
-                cash += reward;
-                logMessage("🎉 مبروك! انتصرت في المعركة وحصلت على 💵 " + reward);
-                setTimeout(resetBattle, 2000);
-            } else if (playerHp <= 0) {
-                logMessage("💀 هُزمت في المعركة... جاري استعادة قوتك للثأر...");
-                setTimeout(resetBattle, 2000);
+        function moveRight() {
+            if (isGameOver) return;
+            player.x += player.speed;
+            if (player.x > canvas.width - player.width) {
+                player.x = canvas.width - player.width;
             }
         }
 
-        function resetBattle() {
-            playerHp = 100;
-            enemyHp = 100 + (wins * 25);
-            let randomIdx = Math.floor(Math.random() * enemies.length);
-            currentEnemyName = enemies[randomIdx];
-            logMessage("🔄 ظهر خصم جديد في الشارع: " + currentEnemyName);
-            updateUI();
+        function spawnObstacle() {
+            let size = 35;
+            let xPos = Math.random() * (canvas.width - size);
+            obstacles.push({
+                x: xPos,
+                y: -40,
+                width: size,
+                height: size,
+                speed: 3 + Math.random() * 3,
+                color: "#ef4444"
+            });
         }
 
-        updateUI();
+        function update() {
+            if (isGameOver) return;
+
+            spawnTimer++;
+            if (spawnTimer > 50) {
+                spawnObstacle();
+                spawnTimer = 0;
+            }
+
+            // تحريك العقبات للأفل
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                obstacles[i].y += obstacles[i].speed;
+
+                // التحقق من الاصطدام باللاعب
+                if (
+                    player.x < obstacles[i].x + obstacles[i].width &&
+                    player.x + player.width > obstacles[i].x &&
+                    player.y < obstacles[i].y + obstacles[i].height &&
+                    player.y + player.height > obstacles[i].y
+                ) {
+                    obstacles.splice(i, 1);
+                    hp--;
+                    document.getElementById("hpVal").innerText = hp;
+                    if (hp <= 0) {
+                        isGameOver = true;
+                    }
+                    continue;
+                }
+
+                // إزالة العقبات التي تجاوزت الشاشة واحتساب النقاط
+                if (obstacles[i].y > canvas.height) {
+                    obstacles.splice(i, 1);
+                    score += 10;
+                    document.getElementById("scoreVal").innerText = score;
+                }
+            }
+        }
+
+        function draw() {
+            // مسح الشاشة
+            ctx.fillStyle = "#090d16";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // رسم اللاعب
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "12px sans-serif";
+            ctx.fillText("البطل", player.x + 8, player.y + 25);
+
+            // رسم الأعداء/العقبات
+            for (let obs of obstacles) {
+                ctx.fillStyle = obs.color;
+                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+            }
+
+            // رسالة نهاية اللعبة
+            if (isGameOver) {
+                ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#ef4444";
+                ctx.font = "bold 22px sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText("انتهت المعركة!", canvas.width / 2, canvas.height / 2 - 15);
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "14px sans-serif";
+                ctx.fillText("اضغط لتحديث الصفحة وإعادة المحاولة", canvas.width / 2, canvas.height / 2 + 20);
+            }
+        }
+
+        function loop() {
+            update();
+            draw();
+            if (!isGameOver) {
+                requestAnimationFrame(loop);
+            }
+        }
+
+        // إعادة تشغيل اللعبة عند الضغط على الشاشة في حال الخسارة
+        canvas.addEventListener("click", () => {
+            if (isGameOver) {
+                location.reload();
+            }
+        });
+
+        // بدء حلقة اللعبة
+        loop();
     </script>
 
 </body>
