@@ -14,7 +14,7 @@
         body {
             background-color: #0f111a;
             color: #ffffff;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -33,29 +33,29 @@
             text-align: center;
             color: #ff4757;
             margin-bottom: 5px;
-            font-size: 26px;
+            font-size: 24px;
         }
         .subtitle {
             text-align: center;
             color: #a4b0be;
-            font-size: 14px;
-            margin-bottom: 20px;
+            font-size: 13px;
+            margin-bottom: 15px;
         }
         .stats-box {
             background: #11131c;
             border-radius: 10px;
-            padding: 15px;
+            padding: 12px;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border: 1px solid #ff4757;
         }
         .score {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
             color: #2ed573;
         }
         .label {
-            font-size: 14px;
+            font-size: 13px;
             color: #a4b0be;
         }
         .main-btn {
@@ -63,44 +63,46 @@
             background: linear-gradient(45deg, #ff4757, #ff6b81);
             color: white;
             border: none;
-            padding: 18px;
-            font-size: 20px;
+            padding: 15px;
+            font-size: 18px;
             font-weight: bold;
             border-radius: 12px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
             transition: 0.1s;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .main-btn:active {
             transform: scale(0.97);
         }
         .section-title {
-            font-size: 16px;
+            font-size: 15px;
             color: #ffa502;
-            margin-bottom: 10px;
+            margin: 15px 0 8px 0;
             border-bottom: 1px solid #2d3250;
-            padding-bottom: 5px;
+            padding-bottom: 4px;
         }
-        .upgrade-btn {
+        .upgrade-btn, .mission-btn {
             width: 100%;
             background: #2f3542;
             color: white;
             border: none;
-            padding: 12px;
+            padding: 10px 12px;
             border-radius: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
             transition: 0.2s;
             border: 1px solid #57606f;
+            font-size: 13px;
         }
-        .upgrade-btn:hover {
-            background: #57606f;
+        .mission-btn {
+            background: #1e3799;
+            border-color: #4a69bd;
         }
-        .upgrade-btn:disabled {
+        .upgrade-btn:disabled, .mission-btn:disabled {
             background: #1e2229;
             color: #57606f;
             border-color: #2d3250;
@@ -112,17 +114,17 @@
 
     <div class="container">
         <h1>🔥 أساطير الشارع 🔥</h1>
-        <div class="subtitle">ابنِ إمبراطوريتك وسيطر على الحي</div>
+        <div class="subtitle">النسخة الشاملة والمطورة</div>
 
         <div class="stats-box">
             <div class="label">إجمالي النفوذ (النقاط)</div>
             <div class="score" id="score">0</div>
-            <div style="font-size: 12px; color: #747d8c; margin-top: 5px;" id="cps">يكسب: 0 نقطة / ثانية</div>
+            <div style="font-size: 11px; color: #747d8c; margin-top: 3px;" id="cps">يكسب: 0 نقطة / ثانية</div>
         </div>
 
         <button class="main-btn" onclick="boostScore()">⚡ فرض السيطرة</button>
 
-        <div class="section-title">🛠️ تطويرات وترقيات</div>
+        <div class="section-title">🛠️ التطويرات والترقيات</div>
         
         <button class="upgrade-btn" id="buyFollower" onclick="buyFollower()">
             <span>👥 تجنيد تابع (+1/ثانية)</span>
@@ -133,6 +135,18 @@
             <span>💪 تقوية الضربة (+1 للنقرة)</span>
             <span id="powerCost">50 نقطة</span>
         </button>
+
+        <div class="section-title">🗺️ مهام السيطرة على الأحياء</div>
+
+        <button class="mission-btn" id="mission1" onclick="doMission(100, 500, 'mission1')">
+            <span>🛡️ تأمين الزقاق الخلفي (جائزة: 500)</span>
+            <span>تكلفة: 100</span>
+        </button>
+
+        <button class="mission-btn" id="mission2" onclick="doMission(500, 3000, 'mission2')">
+            <span>👑 السيطرة على الشارع الرئيسي (جائزة: 3000)</span>
+            <span>تكلفة: 500</span>
+        </button>
     </div>
 
     <script>
@@ -141,8 +155,6 @@
         let cps = 0;
         
         let followerCost = 15;
-        let followerCount = 0;
-        
         let powerCost = 50;
 
         function boostScore() {
@@ -153,7 +165,6 @@
         function buyFollower() {
             if (score >= followerCost) {
                 score -= followerCost;
-                followerCount++;
                 cps++;
                 followerCost = Math.floor(followerCost * 1.5);
                 updateDisplay();
@@ -169,18 +180,30 @@
             }
         }
 
+        function doMission(cost, reward, buttonId) {
+            if (score >= cost) {
+                score -= cost;
+                score += reward;
+                document.getElementById(buttonId).disabled = true;
+                document.getElementById(buttonId).style.opacity = "0.5";
+                updateDisplay();
+            }
+        }
+
         function updateDisplay() {
             document.getElementById('score').innerText = score;
             document.getElementById('cps').innerText = "يكسب: " + cps + " نقطة / ثانية";
             document.getElementById('followerCost').innerText = followerCost + " نقطة";
             document.getElementById('powerCost').innerText = powerCost + " نقطة";
 
-            // تعطيل أو تفعيل الأزرار حسب الرصيد
             document.getElementById('buyFollower').disabled = score < followerCost;
             document.getElementById('buyPower').disabled = score < powerCost;
+            
+            // التحقق من مهام السيطرة
+            if (score < 100) document.getElementById('mission1').disabled = true;
+            if (score < 500) document.getElementById('mission2').disabled = true;
         }
 
-        // نظام النقاط التلقائية كل ثانية
         setInterval(function() {
             score += cps;
             updateDisplay();
