@@ -2,115 +2,20 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>حريف الشارع - Street Legends</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#08111f;font-family:Arial;color:white}
+#game{position:fixed;inset:0;width:100%;height:100%;background:#159447}
+#hud{
+ position:fixed;top:10px;left:50%;transform:translateX(-50%);
+ width:94%;max-width:600px;display:flex;justify-content:space-between;
+ z-index:5;font-weight:bold
 }
-
-html,
-body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #080b16;
-    font-family: Arial, sans-serif;
-    touch-action: none;
-}
-
-#game {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    background: #111827;
-}
-
-/* واجهة المباراة */
-#hud {
-    position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(94vw, 650px);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 10;
-    color: white;
-    pointer-events: none;
-}
-
-.scoreBox {
-    min-width: 80px;
-    padding: 7px 14px;
-    border-radius: 12px;
-    background: rgba(0,0,0,.55);
-    text-align: center;
-    font-weight: bold;
-    border: 1px solid rgba(255,255,255,.15);
-}
-
-#timer {
-    font-size: 22px;
-}
-
-#message {
-    position: fixed;
-    top: 25%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: clamp(28px, 8vw, 60px);
-    font-weight: 900;
-    text-align: center;
-    z-index: 20;
-    pointer-events: none;
-    text-shadow: 0 4px 15px black;
-}
-
-/* أزرار التحكم */
-#controls {
-    position: fixed;
-    inset: 0;
-    z-index: 15;
-    pointer-events: none;
-}
-
-/* عصا التحكم */
-#joystick {
-    position: absolute;
-    bottom: 25px;
-    left: 25px;
-    width: 125px;
-    height: 125px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.12);
-    border: 2px solid rgba(255,255,255,.25);
-    pointer-events: auto;
-}
-
-#stick {
-    position: absolute;
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.7);
-    left: 33px;
-    top: 33px;
-    box-shadow: 0 4px 15px rgba(0,0,0,.4);
-}
-
-/* الأزرار اليمنى */
-.actionButtons {
-    position: absolute;
-    bottom: 
+.box{background:#000b;padding:8px 16px;border-radius:12px}
+#menu,#end{
+ position:fixed;inset:0;display:flex;flex-direction:column;
+ justify-content:center;align-items:center;text-align:center;
+ background:linear-gradient(#07111ddd,#07111df5);z-index
