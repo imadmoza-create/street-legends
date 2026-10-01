@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أساطير الشارع - Street Legends</title>
+    <title>أساطير الشارع - Street Legends | النسخة التجارية</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,95 +12,138 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            background-color: #0b0c10;
+            background-color: #0b0f19;
             color: #ffffff;
-            padding: 15px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
         }
         .container {
-            max-width: 420px;
+            max-width: 440px;
             width: 100%;
-            background: #1f2833;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-            border: 2px solid #66fcf1;
+            background: #131b2e;
+            border-radius: 16px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            border: 2px solid #3b82f6;
         }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e293b;
+            padding: 10px 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #334155;
+        }
+        .currency {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .cash { color: #22c55e; }
+        .gems { color: #38bdf8; }
+        
         h1 {
             text-align: center;
-            color: #66fcf1;
-            margin-bottom: 5px;
-            font-size: 26px;
+            color: #f8fafc;
+            margin-bottom: 3px;
+            font-size: 22px;
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
         }
         .subtitle {
             text-align: center;
-            color: #c5c6c7;
-            font-size: 13px;
-            margin-bottom: 20px;
+            color: #94a3b8;
+            font-size: 11px;
+            margin-bottom: 15px;
         }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
+        
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
         }
-        .stat-box {
-            background: #0b0c10;
-            border: 1px solid #45a29e;
+        .tab-btn {
+            flex: 1;
+            background: #1e293b;
+            color: #94a3b8;
+            border: 1px solid #334155;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            background: #3b82f6;
+            color: #ffffff;
+            border-color: #60a5fa;
+        }
+        
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
             border-radius: 10px;
             padding: 12px;
-            text-align: center;
-        }
-        .stat-value {
-            font-size: 20px;
-            font-weight: bold;
-            color: #66fcf1;
-            margin-top: 5px;
-        }
-        .action-area {
-            background: #0b0c10;
-            border: 2px dashed #45a29e;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .main-action-btn {
-            background: linear-gradient(135deg, #45a29e, #66fcf1);
-            color: #0b0c10;
-            border: none;
-            padding: 15px 25px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(102, 252, 241, 0.3);
-            transition: 0.1s;
-            width: 100%;
-        }
-        .main-action-btn:active {
-            transform: scale(0.96);
-        }
-        .section-title {
-            font-size: 15px;
-            color: #66fcf1;
             margin-bottom: 10px;
-            border-bottom: 1px solid #45a29e;
-            padding-bottom: 5px;
         }
-        .log-box {
-            background: #0b0c10;
-            border-radius: 8px;
+        .card-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #f1f5f9;
+            margin-bottom: 5px;
+        }
+        .card-desc {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+        
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
             padding: 10px;
-            height: 90px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .btn:active {
+            transform: scale(0.98);
+        }
+        .btn-shop {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        .btn-recharge {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .log-box {
+            background: #090d16;
+            border-radius: 8px;
+            padding: 8px;
+            height: 70px;
             overflow-y: auto;
-            font-size: 12px;
-            color: #c5c6c7;
-            border: 1px solid #45a29e;
-            text-align: right;
+            font-size: 11px;
+            color: #cbd5e1;
+            border: 1px solid #1e293b;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -108,48 +151,148 @@
 
     <div class="container">
         <h1>🔥 أساطير الشارع 🔥</h1>
-        <div class="subtitle">النسخة الرسمية المطورة حسب الاتفاق</div>
+        <div class="subtitle">المنصة التجارية واقتصاد اللعبة</div>
 
-        <div class="stats-grid">
-            <div class="stat-box">
-                <div style="font-size: 12px; color: #c5c6c7;">النفوذ والقوة</div>
-                <div class="stat-value" id="power">100</div>
+        <!-- شريط العمليات النقدية والألماس للشحن -->
+        <div class="header">
+            <div class="currency cash">💵 <span id="cashVal">1000</span></div>
+            <div class="currency gems">💎 <span id="gemsVal">50</span></div>
+            <div style="font-size: 11px; color: #f59e0b;" id="staminaDisplay">⚡ طاقة: 100/100</div>
+        </div>
+
+        <!-- أزرار التنقل الرئيسية -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('arena', this)">⚔️ الساحة</button>
+            <button class="tab-btn" onclick="switchTab('shop', this)">🛒 متجر الشحن</button>
+            <button class="tab-btn" onclick="switchTab('gear', this)">🛡️ العتاد والأسلحة</button>
+        </div>
+
+        <!-- قسم الساحة والمعارك -->
+        <div id="arena" class="section active">
+            <div class="card">
+                <div class="card-title">معارك السيطرة المباشرة</div>
+                <div class="card-desc">اختر خوض معركة ضد عصابات الحي لكسب المال والنفوذ (تستهلك طاقة).</div>
+                <button class="btn" onclick="fightBattle()">⚔️ هجوم على عصابة الحي</button>
             </div>
-            <div class="stat-box">
-                <div style="font-size: 12px; color: #c5c6c7;">السيطرة على الحي</div>
-                <div class="stat-value" id="territory">منطقة 1</div>
+            
+            <div class="card" style="text-align: center;">
+                <div style="font-size: 12px; color: #94a3b8;">مستوى النفوذ الحالي</div>
+                <div id="powerLevel" style="font-size: 20px; font-weight: bold; color: #3b82f6; margin-top: 5px;">مقاتل مبتدئ (قوة: 10)</div>
+            </div>
+
+            <div class="log-box" id="gameLog">
+                أهلاً بك يا زعيم في النسخة التجارية. استعد لبناء إمبراطوريتك...<br>
             </div>
         </div>
 
-        <div class="action-area">
-            <button class="main-action-btn" onclick="performAction()">⚔️ فرض النفوذ والسيطرة</button>
+        <!-- قسم متجر الشحن والترقيات المميزة -->
+        <div id="shop" class="section">
+            <div class="card">
+                <div class="card-title">💎 حزمة الألماس المتاحة للشحن</div>
+                <div class="card-desc">اشحن رصيدك فوراً لفتح أقوى الميزات والعتاد الحصري.</div>
+                <button class="btn btn-recharge" onclick="buyGems(500, 5.00)">شحن 500 ألماسة (5$)</button>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">⚡ شراء طاقة إضافية</div>
+                <div class="card-desc">استعادة طاقة المعارك فوراً مقابل 10 ألماس.</div>
+                <button class="btn btn-shop" onclick="refillStamina()">شحن الطاقة الآن (💎 10)</button>
+            </div>
         </div>
 
-        <div class="section-title">📜 سجل أحداث الشارع</div>
-        <div class="log-box" id="gameLog">
-            أهلاً بك يا زعيم في أساطير الشارع. ابدأ فرض النفوذ والسيطرة الآن...<br>
+        <!-- قسم العتاد والأسلحة -->
+        <div id="gear" class="section">
+            <div class="card">
+                <div class="card-title">🔪 سكين قتال الشوارع</div>
+                <div class="card-desc">يزيد قوة هجومك بمقدار +25.</div>
+                <button class="btn btn-shop" id="buyKnife" onclick="buyWeapon('knife', 300, 25)">شراء بـ 💵 300</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🛡️ درع فولاذي أسطوري</div>
+                <div class="card-desc">يحميك من هجمات الخصوم ويزيد النفوذ.</div>
+                <button class="btn btn-shop" id="buyShield" onclick="buyWeapon('shield', 50, 50)">شراء بـ 💎 50</button>
+            </div>
         </div>
     </div>
 
     <script>
-        let power = 100;
-        let territoryLevel = 1;
+        let cash = 1000;
+        let gems = 50;
+        let stamina = 100;
+        let basePower = 10;
+        let hasKnife = false;
+        let hasShield = false;
 
         function logMessage(msg) {
             const logBox = document.getElementById('gameLog');
             logBox.innerHTML = msg + "<br>" + logBox.innerHTML;
         }
 
-        function performAction() {
-            power += 15;
-            document.getElementById('power').innerText = power;
-            
-            if (power >= territoryLevel * 200) {
-                territoryLevel++;
-                document.getElementById('territory').innerText = "منطقة " + territoryLevel;
-                logMessage("👑 تم توسيع النفوذ والسيطرة والانتقال إلى المستوى " + territoryLevel + "!");
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function updateUI() {
+            document.getElementById('cashVal').innerText = cash;
+            document.getElementById('gemsVal').innerText = gems;
+            document.getElementById('staminaDisplay').innerText = "⚡ طاقة: " + stamina + "/100";
+            document.getElementById('powerLevel').innerText = "قوة الهجوم الإجمالية: " + basePower;
+        }
+
+        function fightBattle() {
+            if (stamina < 20) {
+                logMessage("⚠️ الطاقة منخفضة جداً! اشحن طاقتك من متجر الشحن.");
+                return;
+            }
+            stamina -= 20;
+            let earnedCash = Math.floor(Math.random() * 100) + 50;
+            cash += earnedCash;
+            logMessage("⚔️ انتصرت في الاشتباك! ربحت 💵 " + earnedCash);
+            updateUI();
+        }
+
+        function buyGems(amount, price) {
+            gems += amount;
+            logMessage("💎 تم شحن رصيدك بنجاح بمقدار " + amount + " ألماسة (محاكاة دفع ناجحة).");
+            updateUI();
+        }
+
+        function refillStamina() {
+            if (gems >= 10) {
+                gems -= 10;
+                stamina = 100;
+                logMessage("⚡ تم تعبئة طاقة القتال بالكامل مقابل 10 ألماس.");
+                updateUI();
             } else {
-                logMessage("⚡ تم تنفيذ عملية ناجحة في الشارع (+15 نفوذ)");
+                logMessage("❌ لا تملك ألماس كافٍ للشحن.");
+            }
+        }
+
+        function buyWeapon(type, cost, powerBoost) {
+            if (type === 'knife') {
+                if (cash >= cost && !hasKnife) {
+                    cash -= cost;
+                    hasKnife = true;
+                    basePower += powerBoost;
+                    document.getElementById('buyKnife').innerText = "تم الشراء ✓";
+                    document.getElementById('buyKnife').disabled = true;
+                    logMessage("🔪 اشتريت سكين الشارع وزادت قوتك!");
+                    updateUI();
+                }
+            } else if (type === 'shield') {
+                if (gems >= cost && !hasShield) {
+                    gems -= cost;
+                    hasShield = true;
+                    basePower += powerBoost;
+                    document.getElementById('buyShield').innerText = "تم الشراء ✓";
+                    document.getElementById('buyShield').disabled = true;
+                    logMessage("🛡️ اشتريت الدرع الأسطوري بالألماس!");
+                    updateUI();
+                }
             }
         }
     </script>
