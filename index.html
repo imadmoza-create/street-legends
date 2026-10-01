@@ -1,234 +1,116 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أساطير الشارع - Street Legends | لعبة الحركة</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background-color: #0b0f19;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-        .game-container {
-            width: 100%;
-            max-width: 400px;
-            background: #131b2e;
-            border-radius: 16px;
-            padding: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            border: 2px solid #3b82f6;
-            text-align: center;
-        }
-        h1 {
-            font-size: 18px;
-            color: #3b82f6;
-            margin-bottom: 5px;
-        }
-        .score-board {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            margin-bottom: 8px;
-            padding: 0 5px;
-            font-weight: bold;
-        }
-        canvas {
-            background: #090d16;
-            border-radius: 10px;
-            display: block;
-            margin: 0 auto;
-            border: 1px solid #334155;
-        }
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .ctrl-btn {
-            flex: 1;
-            background: #2563eb;
-            color: white;
-            border: none;
-            padding: 14px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            user-select: none;
-        }
-        .ctrl-btn:active {
-            background: #1d4ed8;
-            transform: scale(0.96);
-        }
-    </style>
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <div class="game-container">
-        <h1>🔥 أساطير الشارع - ساحة الحركة 🔥</h1>
-        <div class="score-board">
-            <div>النقاط: <span id="scoreVal">0</span></div>
-            <div>المحاولات (HP): <span id="hpVal">3</span></div>
-        </div>
+<title>حريف الشارع - Street Legends</title>
 
-        <!-- شاشة اللعب التفاعلية Canvas -->
-        <canvas id="gameCanvas" width="360" height="420"></canvas>
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
 
-        <div class="controls">
-            <button class="ctrl-btn" ontouchstart="moveLeft()" onclick="moveLeft()">◀️ يسار</button>
-            <button class="ctrl-btn" ontouchstart="moveRight()" onclick="moveRight()">يمين ▶️</button>
-        </div>
-    </div>
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #080b16;
+    font-family: Arial, sans-serif;
+    touch-action: none;
+}
 
-    <script>
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
+#game {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: #111827;
+}
 
-        let score = 0;
-        let hp = 3;
-        let isGameOver = false;
+/* واجهة المباراة */
+#hud {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(94vw, 650px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    color: white;
+    pointer-events: none;
+}
 
-        // خصائص اللاعب
-        let player = {
-            x: 150,
-            y: 360,
-            width: 40,
-            height: 40,
-            speed: 25,
-            color: "#3b82f6"
-        };
+.scoreBox {
+    min-width: 80px;
+    padding: 7px 14px;
+    border-radius: 12px;
+    background: rgba(0,0,0,.55);
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid rgba(255,255,255,.15);
+}
 
-        // خصائص العقبات (الأعداء في الشارع)
-        let obstacles = [];
-        let spawnTimer = 0;
+#timer {
+    font-size: 22px;
+}
 
-        function moveLeft() {
-            if (isGameOver) return;
-            player.x -= player.speed;
-            if (player.x < 0) player.x = 0;
-        }
+#message {
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: clamp(28px, 8vw, 60px);
+    font-weight: 900;
+    text-align: center;
+    z-index: 20;
+    pointer-events: none;
+    text-shadow: 0 4px 15px black;
+}
 
-        function moveRight() {
-            if (isGameOver) return;
-            player.x += player.speed;
-            if (player.x > canvas.width - player.width) {
-                player.x = canvas.width - player.width;
-            }
-        }
+/* أزرار التحكم */
+#controls {
+    position: fixed;
+    inset: 0;
+    z-index: 15;
+    pointer-events: none;
+}
 
-        function spawnObstacle() {
-            let size = 35;
-            let xPos = Math.random() * (canvas.width - size);
-            obstacles.push({
-                x: xPos,
-                y: -40,
-                width: size,
-                height: size,
-                speed: 3 + Math.random() * 3,
-                color: "#ef4444"
-            });
-        }
+/* عصا التحكم */
+#joystick {
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.12);
+    border: 2px solid rgba(255,255,255,.25);
+    pointer-events: auto;
+}
 
-        function update() {
-            if (isGameOver) return;
+#stick {
+    position: absolute;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.7);
+    left: 33px;
+    top: 33px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.4);
+}
 
-            spawnTimer++;
-            if (spawnTimer > 50) {
-                spawnObstacle();
-                spawnTimer = 0;
-            }
-
-            // تحريك العقبات للأفل
-            for (let i = obstacles.length - 1; i >= 0; i--) {
-                obstacles[i].y += obstacles[i].speed;
-
-                // التحقق من الاصطدام باللاعب
-                if (
-                    player.x < obstacles[i].x + obstacles[i].width &&
-                    player.x + player.width > obstacles[i].x &&
-                    player.y < obstacles[i].y + obstacles[i].height &&
-                    player.y + player.height > obstacles[i].y
-                ) {
-                    obstacles.splice(i, 1);
-                    hp--;
-                    document.getElementById("hpVal").innerText = hp;
-                    if (hp <= 0) {
-                        isGameOver = true;
-                    }
-                    continue;
-                }
-
-                // إزالة العقبات التي تجاوزت الشاشة واحتساب النقاط
-                if (obstacles[i].y > canvas.height) {
-                    obstacles.splice(i, 1);
-                    score += 10;
-                    document.getElementById("scoreVal").innerText = score;
-                }
-            }
-        }
-
-        function draw() {
-            // مسح الشاشة
-            ctx.fillStyle = "#090d16";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // رسم اللاعب
-            ctx.fillStyle = player.color;
-            ctx.fillRect(player.x, player.y, player.width, player.height);
-            ctx.fillStyle = "#ffffff";
-            ctx.font = "12px sans-serif";
-            ctx.fillText("البطل", player.x + 8, player.y + 25);
-
-            // رسم الأعداء/العقبات
-            for (let obs of obstacles) {
-                ctx.fillStyle = obs.color;
-                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-            }
-
-            // رسالة نهاية اللعبة
-            if (isGameOver) {
-                ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "#ef4444";
-                ctx.font = "bold 22px sans-serif";
-                ctx.textAlign = "center";
-                ctx.fillText("انتهت المعركة!", canvas.width / 2, canvas.height / 2 - 15);
-                ctx.fillStyle = "#ffffff";
-                ctx.font = "14px sans-serif";
-                ctx.fillText("اضغط لتحديث الصفحة وإعادة المحاولة", canvas.width / 2, canvas.height / 2 + 20);
-            }
-        }
-
-        function loop() {
-            update();
-            draw();
-            if (!isGameOver) {
-                requestAnimationFrame(loop);
-            }
-        }
-
-        // إعادة تشغيل اللعبة عند الضغط على الشاشة في حال الخسارة
-        canvas.addEventListener("click", () => {
-            if (isGameOver) {
-                location.reload();
-            }
-        });
-
-        // بدء حلقة اللعبة
-        loop();
-    </script>
-
-</body>
-</html>
+/* الأزرار اليمنى */
+.actionButtons {
+    position: absolute;
+    bottom: 
